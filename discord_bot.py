@@ -24,6 +24,22 @@ async def faucet(ctx, address):
         r = requests.post(url, json={"id": f"{ctx.author.id}", "address": address})
     except Exception as e:
         print(e)
+        await ctx.send(f'Internal server error.')
+        return
+    
+    await ctx.send(f'{r.json()["message"]}')
+
+@bot.command()
+async def balance(ctx, address):
+    print(f"Balance request from {ctx.author}.")
+    try:
+        url = urllib.parse.urljoin(config["faucet_url"], "balance")
+        r = requests.post(url, json={"address": address})
+    except Exception as e:
+        print(e)
+        await ctx.send(f'Internal server error.')
+        return
+    
     await ctx.send(f'{r.json()["message"]}')
 
 def main():
