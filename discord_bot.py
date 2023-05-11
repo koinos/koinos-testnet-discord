@@ -9,6 +9,11 @@ from discord.ext import commands
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 config = None
 
+# Change only the no_category default string
+help_command = commands.DefaultHelpCommand(
+    no_category = 'Faucet Commands'
+)
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
@@ -16,7 +21,9 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("An address is required.")
 
-@bot.command()
+@bot.command(help="Requests tKoin to the given address. THis request can be made once per hour.",
+             brief="Requests tKoin from the faucet",
+             help_command=help_command)
 async def faucet(ctx, address):
     print(f"Faucet request from {ctx.author}.")
     try:
@@ -29,7 +36,9 @@ async def faucet(ctx, address):
     
     await ctx.send(f'{r.json()["message"]}')
 
-@bot.command()
+@bot.command(help="Displays the balance in tKoin at the given address.",
+             brief="Displays tKoin balance",
+             help_command=help_command)
 async def balance(ctx, address):
     print(f"Balance request from {ctx.author}.")
     try:
